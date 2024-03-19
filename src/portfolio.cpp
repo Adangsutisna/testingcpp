@@ -39,18 +39,22 @@ std::vector<std::string> StockPortfolio::getAlphaList() {
 }
 
 std::vector<std::string> StockPortfolio::getValueList() {
-    std::vector<std::pair<Money, std::string>> valuePairs;
+     // Create a vector of just the stock symbols
+    std::vector<std::string> symbols;
     for (const auto& pair : mStocks) {
-        valuePairs.emplace_back(pair.second.getCurrPrice() * pair.second.getNumShares(), pair.first);
+        symbols.push_back(pair.first);
     }
-    std::sort(valuePairs.begin(), valuePairs.end(), [](const auto& a, const auto& b) {
-        return a.first < b.first;
+
+    // Sort the symbols vector based on the total value of each corresponding stock
+    std::sort(symbols.begin(), symbols.end(), [this](const std::string& sym1, const std::string& sym2) {
+        const auto& stock1 = mStocks.at(sym1);
+        const auto& stock2 = mStocks.at(sym2);
+        Money value1 = stock1.getCurrPrice() * stock1.getNumShares();
+        Money value2 = stock2.getCurrPrice() * stock2.getNumShares();
+        return value1 < value2;  // Use '>' if you want descending order
     });
-    std::vector<std::string> sortedSymbols;
-    for (const auto& valuePair : valuePairs) {
-        sortedSymbols.push_back(valuePair.second);
-    }
-    return sortedSymbols;
+
+    return symbols;
 }
 
 std::vector<std::string> StockPortfolio::getDiffList() {

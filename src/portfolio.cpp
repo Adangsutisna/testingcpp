@@ -26,7 +26,16 @@ Money StockPortfolio::getOrigValue() const {
 }
 
 Money StockPortfolio::getProfit() const {
-    return getTotalValue() - getOrigValue();
+    Money totalProfit(0);
+    // Hitung total nilai saat ini dan total nilai pembelian
+    Money totalValueNow = getTotalValue();
+    Money totalValuePurchased = getOrigValue();
+    
+    // Hitung profit dengan mengurangkan total nilai pembelian dari total nilai saat ini
+    // Pastikan bahwa operasi pengurangan ini akurat hingga ke sen terakhir
+    totalProfit = totalValueNow - totalValuePurchased;
+
+    return totalProfit;
 }
 
 std::vector<std::string> StockPortfolio::getAlphaList() {

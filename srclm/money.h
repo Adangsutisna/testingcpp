@@ -19,7 +19,7 @@ public:
     long long getCents() const;
 
     // Getter for testing
-
+	long long getCents();
 
 	// Arithmetic assignment operators
 	Money& operator+=(const Money& right);

@@ -91,4 +91,3 @@ std::istream& operator>>(std::istream& in, Money& money) {
     money = Money(inDollars);
     return in;
 }
-

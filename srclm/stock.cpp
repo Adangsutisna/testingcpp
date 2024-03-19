@@ -43,3 +43,5 @@ std::ostream& operator<<(std::ostream& out, const Stock& stock) {
         << " @ $" << std::fixed << std::setprecision(2) << stock.getPurPrice().getCents() / 100.0;
     return out;
 }
+
+

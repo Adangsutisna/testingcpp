@@ -1,0 +1,24 @@
+BRK.A|Berkshire Hathaway Inc. Cl A|1307.00|11
+APPL|Apple Inc.|0.11|10000.0
+EGLE|Eagle Bulk Shipping Inc.|686760.15|1
+AMZN|Amazon.com Inc.|2.26|500
+WDAY|Workday Inc. Cl A|68.22|14
+ORCL|Oracle Corp.|1.02|900
+COKE|Coca-Cola Consolidated Inc.|8.38|100
+MDLZ|Mondelez International Inc. Cl A|31.07|30
+KHC|Kraft Heinz Co.|88.22|10
+DIS|Walt Disney Co.|0.83|1000
+BTI|British American Tobacco PLC ADR|1.40|600
+
+
++BTI|38.03
++BRK.A|365500
++APPL|135.43
++EGLE|27.90
++AMZN|3277.71
++WDAY|282.00
++ORCL|63.10
++COKE|277.40
++MDLZ|55.29
++KHC|35.60
++DIS|187.00

@@ -4,7 +4,7 @@
 int main() {
     StockPortfolio portfolio;
     
-    // Proses file pembelian awal
+    // Proses file pembelian awalscsc
     // std::string purchaseListPath = "input/purchaseList.txt";
     // if (!processFile(portfolio, purchaseListPath)) {
     //     std::cerr << "Gagal memproses file pembelian: " << purchaseListPath << std::endl;

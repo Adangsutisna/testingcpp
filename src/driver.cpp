@@ -4,23 +4,24 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <sstream> // Memastikan stringstream dapat digunakan
 
 bool buyStock(StockPortfolio& inPort, const std::string& inString) {
     auto parts = strSplit(inString, '|');
-    if (parts.size() != 4) {
-        std::cerr << "Error: Invalid input format for buying stock." << std::endl;
-        return false;
-    }
+    if (parts.size() != 4) return false;
+
     try {
-        // Perhatikan bahwa std::stod akan mengkonversi string ke double dengan benar
-        double priceDollars = std::stod(parts[2]); // Ini dalam dolar
+        double priceDollars = std::stod(parts[2]);
         double numShares = std::stod(parts[3]);
 
-        Money purchasePrice(priceDollars * 100); // Mengonversi dolar ke sen
+        // Membuat Money dengan nilai dolar, mengkonversinya ke sen
+        Money purchasePrice(priceDollars * 100);
+        
+        // Memperbaiki urutan parameter sesuai definisi Stock (symbol, name, price, shares)
         Stock stock(parts[0], parts[1], purchasePrice, numShares);
         inPort.addStock(stock);
     } catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << " during stock purchase." << std::endl;
+        std::cerr << "Exception caught: " << e.what() << std::endl;
         return false;
     }
     return true;
@@ -28,46 +29,44 @@ bool buyStock(StockPortfolio& inPort, const std::string& inString) {
 
 bool updateStock(StockPortfolio& inPort, const std::string& inString) {
     auto parts = strSplit(inString, '|');
-    if (parts.size() != 2) {
-        std::cerr << "Error: Invalid input format for updating stock." << std::endl;
-        return false;
-    }
-    try {
-        if (!inPort.containsStock(parts[0])) {
-            std::cerr << "Error: Stock symbol not found in portfolio." << std::endl;
-            return false;
-        }
+    if (parts.size() != 2) return false;
 
-        double newPriceDollars = std::stod(parts[1]); // Ini dalam dolar
-        Money newPrice(newPriceDollars * 100); // Mengonversi dolar ke sen
+    if (!inPort.containsStock(parts[0])) return false;
+
+    try {
+        double newPriceDollars = std::stod(parts[1]);
+        Money newPrice(newPriceDollars * 100); // Mengkonversi ke sen
         inPort[parts[0]].setCurrentPrice(newPrice);
     } catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << " during stock update." << std::endl;
+        std::cerr << "Exception caught: " << e.what() << std::endl;
         return false;
     }
     return true;
 }
 
-bool processFile(StockPortfolio& inPort, const std::string& inString) {
-    std::ifstream file(inString);
-    if (!file.is_open()) {
-        std::cerr << "Error: Unable to open file " << inString << std::endl;
+bool processFile(StockPortfolio& inPort, const std::string& filename) {
+    std::ifstream file(filename);
+    if (!file) {
+        std::cerr << "Failed to open file: " << filename << std::endl;
         return false;
     }
 
     std::string line;
     while (getline(file, line)) {
-        if (line.empty()) continue; // Skip empty lines
+        line.erase(0, line.find_first_not_of(' ')); // Trim leading whitespace
+        line.erase(line.find_last_not_of(' ') + 1); // Trim trailing whitespace
+        if (line.empty()) continue;
+
+        bool result;
         if (line[0] == '+') {
-            if (!updateStock(inPort, line.substr(1))) {
-                std::cerr << "Error: Failed to update stock with line: " << line << std::endl;
-                return false;
-            }
+            result = updateStock(inPort, line.substr(1));
         } else {
-            if (!buyStock(inPort, line)) {
-                std::cerr << "Error: Failed to buy stock with line: " << line << std::endl;
-                return false;
-            }
+            result = buyStock(inPort, line);
+        }
+
+        if (!result) {
+            std::cerr << "Failed to process line: " << line << std::endl;
+            return false;
         }
     }
     return true;

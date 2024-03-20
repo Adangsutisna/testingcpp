@@ -20,6 +20,20 @@ public:
 
     // Getter for testing
 
+	// Menambahkan pembulatan ke operasi +=
+    Money& operator+=(const Money& other) {
+        mCents += other.mCents;
+        mCents = std::round(mCents); // Memastikan hasilnya dibulatkan (biasanya tidak diperlukan untuk penambahan/pengurangan sederhana)
+        return *this;
+    }
+
+    // Implementasi operator+ menggunakan operator+=
+    friend Money operator+(Money lhs, const Money& rhs) {
+        lhs += rhs;
+        return lhs; // lhs sudah dibulatkan jika diperlukan
+    }
+
+
 
 	// Arithmetic assignment operators
 	Money& operator+=(const Money& right);

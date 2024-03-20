@@ -1,11 +1,10 @@
 #include "money.h"
 #include <iomanip>
-#include <cmath> // Untuk std::round
 
 Money::Money() : mCents(0) {}
 
 Money::Money(double inDollars) {
-    mCents = static_cast<long long>(std::round(inDollars * 100));
+    mCents = static_cast<long long>(inDollars * 100);
 }
 
 Money::Money(long long inDollars, long long inCents) {
@@ -31,14 +30,12 @@ Money& Money::operator-=(const Money& right) {
 }
 
 Money& Money::operator*=(double right) {
-    double tempResult = mCents * right;
-    mCents = static_cast<long long>(std::round(tempResult));
+    mCents = static_cast<long long>(mCents * right);
     return *this;
 }
 
 Money& Money::operator/=(double right) {
-    double tempResult = static_cast<double>(mCents) / right;
-    mCents = static_cast<long long>(std::round(tempResult));
+    mCents = static_cast<long long>(mCents / right);
     return *this;
 }
 
@@ -51,13 +48,11 @@ Money operator-(const Money& left, const Money& right) {
 }
 
 Money operator*(const Money& left, double right) {
-    double tempResult = left.mCents * right;
-    return Money(static_cast<long long>(std::round(tempResult)));
+    return Money(static_cast<long long>(left.mCents * right));
 }
 
 Money operator/(const Money& left, double right) {
-    double tempResult = static_cast<double>(left.mCents) / right;
-    return Money(static_cast<long long>(std::round(tempResult)));
+    return Money(static_cast<long long>(left.mCents / right));
 }
 
 bool operator==(const Money& left, const Money& right) {
@@ -92,7 +87,8 @@ std::ostream& operator<<(std::ostream& out, const Money& money) {
 
 std::istream& operator>>(std::istream& in, Money& money) {
     double inDollars;
-    in >> inDollars;
+    in >> std::fixed >> std::setprecision(2) >> inDollars;
     money = Money(inDollars);
     return in;
 }
+

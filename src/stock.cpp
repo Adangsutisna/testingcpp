@@ -18,7 +18,7 @@ Money Stock::getPurPrice() const {
 }
 
 Money Stock::getChange() const {
-    return mCurrentPrice - mPurchasePrice;
+ return (mCurrentPrice - mPurchasePrice) * mNumShares;
 }
 
 std::string Stock::getSymbol() const {
@@ -40,6 +40,6 @@ void Stock::setCurrentPrice(const Money& inCurrPrice) {
 std::ostream& operator<<(std::ostream& out, const Stock& stock) {
     // Menggunakan std::fixed dan std::setprecision untuk harga, tapi tidak untuk jumlah saham
     out << stock.getSymbol() << " : " << stock.getNumShares()
-        << " @ $" << std::fixed << std::setprecision(2) << stock.getPurPrice().getCents() / 100.0;
+        << " @ $" << std::fixed << std::setprecision(2) << stock.getCurrPrice().getCents() / 100.0;
     return out;
 }

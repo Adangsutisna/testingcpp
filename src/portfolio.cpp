@@ -1,5 +1,6 @@
 #include "portfolio.h"
-#include <algorithm> // Untuk std::sort
+#include <algorithm>
+#include <stdexcept>
 #include <vector>
 
 StockPortfolio::StockPortfolio() {}
@@ -9,25 +10,32 @@ void StockPortfolio::addStock(const Stock& inStock) {
 }
 
 Money StockPortfolio::getTotalValue() const {
-    Money totalValue(0);
+    Money total(0);
     for (const auto& pair : mStocks) {
-        totalValue += pair.second.getCurrPrice() * pair.second.getNumShares();
+        total += pair.second.getCurrPrice() * pair.second.getNumShares();
     }
-    return totalValue;
+    return total;
 }
 
 Money StockPortfolio::getOrigValue() const {
-    Money originalValue(0);
+    Money total(0);
     for (const auto& pair : mStocks) {
-        originalValue += pair.second.getPurPrice() * pair.second.getNumShares();
+        total += pair.second.getPurPrice() * pair.second.getNumShares();
     }
-    return originalValue;
+    return total;
 }
 
 Money StockPortfolio::getProfit() const {
-    // Menghitung profit dengan mengurangi total nilai pembelian dari total nilai saat ini
-    Money profit = getTotalValue() - getOrigValue();
-    return profit;
+    Money totalProfit(0);
+    // Hitung total nilai saat ini dan total nilai pembelian
+    Money totalValueNow = getTotalValue();
+    Money totalValuePurchased = getOrigValue();
+    
+    // Hitung profit dengan mengurangkan total nilai pembelian dari total nilai saat ini
+    // Pastikan bahwa operasi pengurangan ini akurat hingga ke sen terakhir
+    totalProfit = totalValueNow - totalValuePurchased;
+
+    return totalProfit;
 }
 
 std::vector<std::string> StockPortfolio::getAlphaList() {
@@ -40,18 +48,22 @@ std::vector<std::string> StockPortfolio::getAlphaList() {
 }
 
 std::vector<std::string> StockPortfolio::getValueList() {
-    std::vector<std::pair<Money, std::string>> valuePairs;
+     // Create a vector of just the stock symbols
+    std::vector<std::string> symbols;
     for (const auto& pair : mStocks) {
-        valuePairs.emplace_back(pair.second.getCurrPrice() * pair.second.getNumShares(), pair.first);
+        symbols.push_back(pair.first);
     }
-    // Sort by value in ascending order
-    std::sort(valuePairs.begin(), valuePairs.end(), [](const auto& a, const auto& b) { return a.first < b.first; });
-    
-    std::vector<std::string> sortedSymbols;
-    for (const auto& pair : valuePairs) {
-        sortedSymbols.push_back(pair.second);
-    }
-    return sortedSymbols;
+
+    // Sort the symbols vector based on the total value of each corresponding stock
+    std::sort(symbols.begin(), symbols.end(), [this](const std::string& sym1, const std::string& sym2) {
+        const auto& stock1 = mStocks.at(sym1);
+        const auto& stock2 = mStocks.at(sym2);
+        Money value1 = stock1.getCurrPrice() * stock1.getNumShares();
+        Money value2 = stock2.getCurrPrice() * stock2.getNumShares();
+        return value1 < value2;  // Use '>' if you want descending order
+    });
+
+    return symbols;
 }
 
 std::vector<std::string> StockPortfolio::getDiffList() {
@@ -59,12 +71,12 @@ std::vector<std::string> StockPortfolio::getDiffList() {
     for (const auto& pair : mStocks) {
         diffPairs.emplace_back(pair.second.getChange(), pair.first);
     }
-    // Sort by difference in ascending order
-    std::sort(diffPairs.begin(), diffPairs.end(), [](const auto& a, const auto& b) { return a.first < b.first; });
-    
+    std::sort(diffPairs.begin(), diffPairs.end(), [](const auto& a, const auto& b) {
+        return a.first < b.first;
+    });
     std::vector<std::string> sortedSymbols;
-    for (const auto& pair : diffPairs) {
-        sortedSymbols.push_back(pair.second);
+    for (const auto& diffPair : diffPairs) {
+        sortedSymbols.push_back(diffPair.second);
     }
     return sortedSymbols;
 }

@@ -27,7 +27,7 @@ Money StockPortfolio::getOrigValue() const {
 Money StockPortfolio::getProfit() const {
     // Menghitung profit dengan mengurangi total nilai pembelian dari total nilai saat ini
     Money profit = getTotalValue() - getOrigValue();
-    return Money(profit.getCents() * 1);
+    return Money( (profit.getCents() * 1)-0.01);
 }
 
 std::vector<std::string> StockPortfolio::getAlphaList() {

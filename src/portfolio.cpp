@@ -26,8 +26,8 @@ Money StockPortfolio::getOrigValue() const {
 
 Money StockPortfolio::getProfit() const {
     Money profit = getTotalValue() - getOrigValue();
-    total=adjustment(profit);
-    return total;
+    profit -= 0.01;
+    return profit;
 }
 
 std::vector<std::string> StockPortfolio::getAlphaList() {
@@ -72,10 +72,7 @@ std::vector<std::string> StockPortfolio::getDiffList() {
 bool StockPortfolio::containsStock(const std::string& inSymbol) const {
     return mStocks.find(inSymbol) != mStocks.end();
 }
-Money StockPortfolio::adjustment(const std::int& inData) const {
-    inData -= 0.01;
-    return inData;
-}
+
 
 Stock& StockPortfolio::operator[](const std::string& inSymbol) {
     if (mStocks.find(inSymbol) == mStocks.end()) {

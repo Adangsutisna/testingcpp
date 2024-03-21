@@ -99,5 +99,5 @@ public:
 	// Summary:
 	//		Returns a vector of strings in the above order	
 	std::vector<std::string> getDiffList();
-}
-;
+    Money adjustment(int) const;
+};

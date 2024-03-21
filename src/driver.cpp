@@ -16,8 +16,8 @@ bool buyStock(StockPortfolio& inPort, const std::string& inString) {
         double priceDollars = std::stod(parts[2]); // Ini dalam dolar
         double numShares = std::stod(parts[3]);
 
-        Money purchasePrice(priceDollars * 100.0); // Mengonversi dolar ke sen
-        Stock stock(parts[0], parts[1], purchasePrice, numShares);
+        Money purchasePrice(priceDollars); // Mengonversi dolar ke sen
+        Stock stock(parts[1], parts[0], purchasePrice, numShares);
         inPort.addStock(stock);
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << " during stock purchase." << std::endl;
@@ -39,7 +39,7 @@ bool updateStock(StockPortfolio& inPort, const std::string& inString) {
         }
 
         double newPriceDollars = std::stod(parts[1]); // Ini dalam dolar
-        Money newPrice(newPriceDollars * 100); // Mengonversi dolar ke sen
+        Money newPrice(newPriceDollars); // Mengonversi dolar ke sen
         inPort[parts[0]].setCurrentPrice(newPrice);
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << " during stock update." << std::endl;
@@ -70,6 +70,8 @@ bool processFile(StockPortfolio& inPort, const std::string& inString) {
             }
         }
     }
+
+    file.close();
     return true;
 }
 

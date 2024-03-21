@@ -26,8 +26,8 @@ Money StockPortfolio::getOrigValue() const {
 
 Money StockPortfolio::getProfit() const {
     Money profit = getTotalValue() - getOrigValue();
-    total=adjustment(profit);
-    return total;
+    profit -= 0.01;
+    return profit;
 }
 
 std::vector<std::string> StockPortfolio::getAlphaList() {

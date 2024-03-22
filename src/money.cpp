@@ -107,3 +107,9 @@ std::ostream& operator<<(std::ostream& out, const Money& money) {
 }
 
 // Operator overloading untuk membaca nilai dolar dari
+std::istream& operator>>(std::istream& in, Money& money) {
+    double inDollars;
+    in >> std::fixed >> std::setprecision(2) >> inDollars;
+    money = Money(inDollars);
+    return in;
+}

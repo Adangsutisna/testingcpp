@@ -25,9 +25,24 @@ Money StockPortfolio::getOrigValue() const {
 }
 
 Money StockPortfolio::getProfit() const {
-    Money profit = getTotalValue() - getOrigValue();
-    profit -= 0.01;
-    return profit;
+    // Menghitung profit dengan mengurangi total nilai pembelian dari total nilai saat ini
+    
+    // READ: Due to the structure of Money class it discards any floating point value
+    // ex: if we get 100.10 total cents and 10.90 original cents 
+    // We get 90 cents as profit but it would be 89.2 cents
+    // To over come the problem we have recalculate the total and original price again
+
+    double totalValue = 0;
+    for (const auto& pair : mStocks) {
+        totalValue += pair.second.getCurrPrice().getCents() * pair.second.getNumShares();
+    }
+
+    double originalValue = 0;
+    for (const auto& pair : mStocks) {
+        originalValue += pair.second.getPurPrice().getCents() * pair.second.getNumShares();
+    }
+
+    return Money((totalValue - originalValue) / 100.0);
 }
 
 std::vector<std::string> StockPortfolio::getAlphaList() {
